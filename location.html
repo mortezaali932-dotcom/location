@@ -1,0 +1,272 @@
+```html
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>ارسال موقعیت</title>
+
+<style>
+
+body {
+    margin: 0;
+    background: #111827;
+    color: white;
+    font-family: Tahoma, Arial, sans-serif;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    min-height: 100vh;
+}
+
+.box {
+    width: 85%;
+    max-width: 400px;
+
+    background: #1f2937;
+
+    padding: 35px 20px;
+
+    border-radius: 20px;
+
+    text-align: center;
+
+    box-sizing: border-box;
+
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+}
+
+.icon {
+    font-size: 60px;
+}
+
+h1 {
+    font-size: 27px;
+    margin-bottom: 15px;
+}
+
+p {
+    color: #d1d5db;
+
+    line-height: 2;
+
+    margin-bottom: 25px;
+}
+
+button {
+
+    width: 100%;
+
+    padding: 17px;
+
+    border: none;
+
+    border-radius: 12px;
+
+    background: #f97316;
+
+    color: white;
+
+    font-size: 18px;
+
+    font-weight: bold;
+
+    cursor: pointer;
+
+    transition: 0.2s;
+}
+
+button:hover {
+    background: #ea580c;
+}
+
+button:active {
+    transform: scale(0.97);
+}
+
+#status {
+
+    margin-top: 20px;
+
+    color: #d1d5db;
+
+    font-size: 14px;
+
+    line-height: 2;
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<div class="box">
+
+    <div class="icon">📍</div>
+
+    <h1>ارسال موقعیت</h1>
+
+    <p>
+        برای ارسال موقعیت مکانی خود،
+        روی دکمه زیر بزنید.
+    </p>
+
+    <button onclick="getLocation()">
+        📍 ارسال موقعیت با پیامک
+    </button>
+
+    <div id="status"></div>
+
+</div>
+
+
+
+<script>
+
+function getLocation() {
+
+    const status = document.getElementById("status");
+
+
+    // بررسی پشتیبانی از موقعیت مکانی
+
+    if (!navigator.geolocation) {
+
+        status.innerText =
+            "❌ موقعیت مکانی توسط این دستگاه پشتیبانی نمی‌شود.";
+
+        return;
+    }
+
+
+    // نمایش وضعیت
+
+    status.innerText =
+        "⏳ در حال دریافت موقعیت شما...";
+
+
+    // دریافت موقعیت
+
+    navigator.geolocation.getCurrentPosition(
+
+        function(position) {
+
+            // مختصات
+
+            let lat =
+                position.coords.latitude;
+
+            let lon =
+                position.coords.longitude;
+
+
+            // ساخت لینک گوگل مپ
+
+            let mapLink =
+                "https://www.google.com/maps?q="
+                + lat + "," + lon;
+
+
+            // متن پیامک
+
+            let message =
+                "سلام، موقعیت مکانی من:\n"
+                + mapLink;
+
+
+            // شماره مقصد
+
+            let phoneNumber =
+                "09137362573";
+
+
+            // ساخت لینک پیامک
+
+            let smsLink =
+                "sms:"
+                + phoneNumber
+                + "?body="
+                + encodeURIComponent(message);
+
+
+            status.innerText =
+                "📱 در حال باز کردن پیامک...";
+
+
+            // باز کردن برنامه پیامک
+
+            window.location.href =
+                smsLink;
+
+        },
+
+
+        function(error) {
+
+            if (error.code === 1) {
+
+                status.innerText =
+                    "❌ اجازه دسترسی به موقعیت داده نشد.\n"
+                    + "لطفاً اجازه Location را فعال کنید.";
+
+            }
+
+            else if (error.code === 2) {
+
+                status.innerText =
+                    "❌ موقعیت مکانی قابل دریافت نیست.";
+
+            }
+
+            else if (error.code === 3) {
+
+                status.innerText =
+                    "⏳ دریافت موقعیت زمان زیادی برد.\n"
+                    + "لطفاً دوباره تلاش کنید.";
+
+            }
+
+            else {
+
+                status.innerText =
+                    "❌ خطایی در دریافت موقعیت رخ داد.";
+
+            }
+
+        },
+
+
+        {
+
+            // دقت بیشتر GPS
+
+            enableHighAccuracy: true,
+
+            // حداکثر زمان انتظار
+
+            timeout: 15000,
+
+            // استفاده نکردن از موقعیت قبلی
+
+            maximumAge: 0
+
+        }
+
+    );
+
+}
+
+</script>
+
+
+</body>
+
+</html>
+```
